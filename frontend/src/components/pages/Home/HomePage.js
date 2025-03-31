@@ -11,6 +11,7 @@ const HomePage = () => {
   
   // API URL
   const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000/api';
+  const PLACEHOLDER_URL = process.env.REACT_APP_PLACEHOLDER_IMAGE_URL || 'https://via.placeholder.com';
   
   useEffect(() => {
     const fetchFeaturedProducts = async () => {
@@ -36,10 +37,22 @@ const HomePage = () => {
     { name: 'Accessories', icon: '👜' }
   ];
   
+  // Hero section style
+  const heroStyle = {
+    backgroundImage: `linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url('${PLACEHOLDER_URL}/1200x400?text=Hero+Banner')`,
+    backgroundSize: 'cover',
+    backgroundPosition: 'center',
+    color: 'white',
+    padding: '5rem 0',
+    textAlign: 'center',
+    marginBottom: '3rem',
+    borderRadius: '8px'
+  };
+
   return (
     <div className="home-page">
       {/* Hero section */}
-      <section className="hero">
+      <section style={heroStyle}>
         <div className="hero-content">
           <h1>Welcome to Our E-Commerce Store</h1>
           <p>Discover amazing products at great prices</p>

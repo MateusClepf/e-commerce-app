@@ -50,7 +50,7 @@ const CartPage = () => {
               <div className="product-col">
                 <div className="product-details">
                   <img 
-                    src={item.imageUrl || 'https://via.placeholder.com/80x80?text=No+Image'} 
+                    src={item.imageUrl || `${process.env.REACT_APP_PLACEHOLDER_IMAGE_URL}/80x80?text=No+Image`} 
                     alt={item.name} 
                     className="product-thumbnail" 
                   />

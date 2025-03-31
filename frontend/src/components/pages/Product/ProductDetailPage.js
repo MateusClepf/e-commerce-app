@@ -62,7 +62,7 @@ const ProductDetailPage = () => {
       <div className="product-detail-container">
         <div className="product-image-container">
           <img 
-            src={product.imageUrl || 'https://via.placeholder.com/500x500?text=No+Image'} 
+            src={product.imageUrl || `${process.env.REACT_APP_PLACEHOLDER_IMAGE_URL}/500x500?text=No+Image`} 
             alt={product.name} 
             className="product-detail-image" 
           />

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Routes, Route } from 'react-router-dom';
 
 // Components
@@ -16,6 +16,10 @@ import RegisterPage from './components/pages/Auth/RegisterPage';
 import ProfilePage from './components/pages/Auth/ProfilePage';
 
 function App() {
+  useEffect(() => {
+    // Hook for future global settings if needed
+  }, []);
+
   return (
     <div className="App">
       <Header />

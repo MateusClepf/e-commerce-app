@@ -542,7 +542,7 @@ const CheckoutPage = () => {
               <div key={item.id} className="summary-item">
                 <div className="item-info">
                   <img 
-                    src={item.imageUrl || 'https://via.placeholder.com/50x50?text=No+Image'} 
+                    src={item.imageUrl || `${process.env.REACT_APP_PLACEHOLDER_IMAGE_URL}/50x50?text=No+Image`} 
                     alt={item.name} 
                     className="item-thumbnail" 
                   />

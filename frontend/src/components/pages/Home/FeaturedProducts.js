@@ -20,7 +20,7 @@ const FeaturedProducts = ({ products }) => {
         <div className="product-card" key={product.id}>
           <Link to={`/products/${product.id}`}>
             <img 
-              src={product.imageUrl || 'https://via.placeholder.com/300x300?text=No+Image'} 
+              src={product.imageUrl || `${process.env.REACT_APP_PLACEHOLDER_IMAGE_URL}/300x300?text=No+Image`} 
               alt={product.name} 
               className="product-image" 
             />
