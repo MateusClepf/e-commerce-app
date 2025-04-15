@@ -19,7 +19,7 @@ services:
     environment:
       - REACT_APP_API_URL=https://shop-api.whereismypacket.net/api  # for local dev: http://localhost:5000/api
       - REACT_APP_PLACEHOLDER_IMAGE_URL=https://via.placeholder.com
-      - NODE_ENV=production  #${NODE_ENV:-development}
+      - NODE_ENV=${NODE_ENV:-development}
       - MONITORING_ORIGIN_1=https://static.cloudflareinsights.com
       - MONITORING_ORIGIN_2=https://js-agent.newrelic.com
 

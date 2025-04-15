@@ -9,6 +9,15 @@ router.post('/register', authController.register);
 // Login user
 router.post('/login', authController.login);
 
+// Social login
+router.post('/social-login', authController.socialLogin);
+
+// Forgot password - send reset email
+router.post('/forgot-password', authController.forgotPassword);
+
+// Reset password with token
+router.post('/reset-password', authController.resetPassword);
+
 // Get current user profile
 router.get('/profile', [authJwt.verifyToken], authController.getProfile);
 

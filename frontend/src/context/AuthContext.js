@@ -59,11 +59,70 @@ export const AuthProvider = ({ children }) => {
       setLoading(false);
     }
   };
+
+  // Social login
+  const socialLogin = async (provider, accessToken) => {
+    try {
+      setLoading(true);
+      setError(null);
+      
+      const response = await axios.post(`${API_URL}/auth/social-login`, { 
+        provider, 
+        accessToken 
+      });
+      
+      setUser(response.data);
+      localStorage.setItem('user', JSON.stringify(response.data));
+      
+      return response.data;
+    } catch (err) {
+      setError(err.response?.data?.message || `${provider} login failed`);
+      throw err;
+    } finally {
+      setLoading(false);
+    }
+  };
   
   // Logout user
   const logout = () => {
     localStorage.removeItem('user');
     setUser(null);
+  };
+  
+  // Request password reset
+  const forgotPassword = async (email) => {
+    try {
+      setLoading(true);
+      setError(null);
+      
+      const response = await axios.post(`${API_URL}/auth/forgot-password`, { email });
+      return response.data;
+    } catch (err) {
+      setError(err.response?.data?.message || 'Failed to send reset email');
+      throw err;
+    } finally {
+      setLoading(false);
+    }
+  };
+  
+  // Reset password with token
+  const resetPassword = async (token, newPassword) => {
+    try {
+      setLoading(true);
+      setError(null);
+      
+      const response = await axios.post(`${API_URL}/auth/reset-password`, { 
+        token, 
+        password: newPassword 
+      });
+      
+      return response.data;
+    } catch (err) {
+      setError(err.response?.data?.message || 'Password reset failed');
+      throw err;
+    } finally {
+      setLoading(false);
+    }
   };
   
   // Update user profile
@@ -100,7 +159,10 @@ export const AuthProvider = ({ children }) => {
       error,
       register,
       login,
+      socialLogin,
       logout,
+      forgotPassword,
+      resetPassword,
       updateProfile,
       isAuthenticated: !!user,
       isAdmin: user?.role === 'admin'

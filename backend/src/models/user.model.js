@@ -29,6 +29,10 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.ENUM('user', 'admin'),
       defaultValue: 'user'
     },
+    provider: {
+      type: DataTypes.STRING,
+      defaultValue: 'local'
+    },
     address: {
       type: DataTypes.STRING
     },
@@ -46,6 +50,12 @@ module.exports = (sequelize, DataTypes) => {
     },
     phone: {
       type: DataTypes.STRING
+    },
+    resetToken: {
+      type: DataTypes.STRING
+    },
+    resetTokenExpiry: {
+      type: DataTypes.DATE
     }
   });
 
