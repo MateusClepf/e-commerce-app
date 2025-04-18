@@ -23,6 +23,10 @@ db.User = require('./user.model')(sequelize, Sequelize);
 db.Product = require('./product.model')(sequelize, Sequelize);
 db.Order = require('./order.model')(sequelize, Sequelize);
 db.OrderItem = require('./orderItem.model')(sequelize, Sequelize);
+// New models
+db.Category = require('./category.model')(sequelize, Sequelize);
+db.Deal = require('./deal.model')(sequelize, Sequelize);
+db.Coupon = require('./coupon.model')(sequelize, Sequelize);
 
 // Associations
 db.Order.belongsTo(db.User, { foreignKey: 'userId' });
@@ -33,5 +37,9 @@ db.Order.hasMany(db.OrderItem, { foreignKey: 'orderId' });
 
 db.OrderItem.belongsTo(db.Product, { foreignKey: 'productId' });
 db.Product.hasMany(db.OrderItem, { foreignKey: 'productId' });
+
+// New association: Category has many Products
+db.Category.hasMany(db.Product, { foreignKey: 'categoryId' });
+db.Product.belongsTo(db.Category, { foreignKey: 'categoryId' });
 
 module.exports = db;

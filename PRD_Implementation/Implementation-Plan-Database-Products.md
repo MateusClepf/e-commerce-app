@@ -4,72 +4,72 @@ This implementation plan outlines the steps required to move categories, deals, 
 
 ## Phase 1: Database Schema Updates
 
-- [ ] Create Category model in backend/src/models/category.model.js
-  - [ ] Define fields: id, name, icon, bgColor, active, timestamps
-  - [ ] Add validation rules
+- [x] Create Category model in backend/src/models/category.model.js
+  - [x] Define fields: id, name, icon, bgColor, active, timestamps
+  - [x] Add validation rules
 
-- [ ] Create Deal/Promotion model in backend/src/models/deal.model.js
-  - [ ] Define fields: id, title, description, bannerText, imageUrl, targetUrl, discountPercentage, startDate, endDate, active, position, timestamps
-  - [ ] Add validation rules
+- [x] Create Deal/Promotion model in backend/src/models/deal.model.js
+  - [x] Define fields: id, title, description, bannerText, imageUrl, targetUrl, discountPercentage, startDate, endDate, active, position, timestamps
+  - [x] Add validation rules
 
-- [ ] Create Coupon model in backend/src/models/coupon.model.js
-  - [ ] Define fields: id, code, discount, type, maxDiscount, startDate, endDate, active, usageLimit, minimumPurchase, timestamps
-  - [ ] Add validation rules
+- [x] Create Coupon model in backend/src/models/coupon.model.js
+  - [x] Define fields: id, code, discount, type, maxDiscount, startDate, endDate, active, usageLimit, minimumPurchase, timestamps
+  - [x] Add validation rules
 
-- [ ] Update Product model in backend/src/models/product.model.js
-  - [ ] Add categoryId as foreign key to Category
-  - [ ] Add isOnSale, salePrice, and newArrival fields
-  - [ ] Modify validation rules as needed
+- [x] Update Product model in backend/src/models/product.model.js
+  - [x] Add categoryId as foreign key to Category
+  - [x] Add isOnSale, salePrice, and newArrival fields
+  - [x] Modify validation rules as needed
 
-- [ ] Update DB associations in backend/src/models/index.js
-  - [ ] Create one-to-many relationship between Category and Product
+- [x] Update DB associations in backend/src/models/index.js
+  - [x] Create one-to-many relationship between Category and Product
 
 ## Phase 2: API Implementation
 
-- [ ] Create Categories controller in backend/src/controllers/category.controller.js
-  - [ ] Implement GET /api/categories endpoint
-  - [ ] Implement GET /api/categories/:id endpoint
-  - [ ] Implement POST /api/categories endpoint (admin)
-  - [ ] Implement PUT /api/categories/:id endpoint (admin)
-  - [ ] Implement DELETE /api/categories/:id endpoint (admin)
+- [x] Create Categories controller in backend/src/controllers/category.controller.js
+  - [x] Implement GET /api/categories endpoint
+  - [x] Implement GET /api/categories/:id endpoint
+  - [x] Implement POST /api/categories endpoint (admin)
+  - [x] Implement PUT /api/categories/:id endpoint (admin)
+  - [x] Implement DELETE /api/categories/:id endpoint (admin)
 
-- [ ] Create Deals controller in backend/src/controllers/deal.controller.js
-  - [ ] Implement GET /api/deals endpoint
-  - [ ] Implement GET /api/deals/:id endpoint
-  - [ ] Implement POST /api/deals endpoint (admin)
-  - [ ] Implement PUT /api/deals/:id endpoint (admin)
-  - [ ] Implement DELETE /api/deals/:id endpoint (admin)
+- [x] Create Deals controller in backend/src/controllers/deal.controller.js
+  - [x] Implement GET /api/deals endpoint
+  - [x] Implement GET /api/deals/:id endpoint
+  - [x] Implement POST /api/deals endpoint (admin)
+  - [x] Implement PUT /api/deals/:id endpoint (admin)
+  - [x] Implement DELETE /api/deals/:id endpoint (admin)
 
-- [ ] Create Coupons controller in backend/src/controllers/coupon.controller.js
-  - [ ] Implement GET /api/coupons endpoint (admin)
-  - [ ] Implement GET /api/coupons/validate/:code endpoint
-  - [ ] Implement POST /api/coupons endpoint (admin)
-  - [ ] Implement PUT /api/coupons/:id endpoint (admin)
-  - [ ] Implement DELETE /api/coupons/:id endpoint (admin)
+- [x] Create Coupons controller in backend/src/controllers/coupon.controller.js
+  - [x] Implement GET /api/coupons endpoint (admin)
+  - [x] Implement GET /api/coupons/validate/:code endpoint
+  - [x] Implement POST /api/coupons endpoint (admin)
+  - [x] Implement PUT /api/coupons/:id endpoint (admin)
+  - [x] Implement DELETE /api/coupons/:id endpoint (admin)
 
-- [ ] Update Products controller in backend/src/controllers/product.controller.js
-  - [ ] Add filtering by categoryId
-  - [ ] Add filtering by isOnSale
-  - [ ] Add filtering by newArrival
+- [x] Update Products controller in backend/src/controllers/product.controller.js
+  - [x] Add filtering by categoryId
+  - [x] Add filtering by isOnSale
+  - [x] Add filtering by newArrival
 
-- [ ] Create routes in backend/src/routes/
-  - [ ] Define category.routes.js
-  - [ ] Define deal.routes.js
-  - [ ] Define coupon.routes.js
-  - [ ] Update product.routes.js as needed
-  - [ ] Register all routes in index.js
+- [x] Create routes in backend/src/routes/
+  - [x] Define category.routes.js
+  - [x] Define deal.routes.js
+  - [x] Define coupon.routes.js
+  - [x] Update product.routes.js as needed
+  - [x] Register all routes in index.js
 
 ## Phase 3: Seed Data Migration
 
-- [ ] Update database seeder in backend/src/utils/dbSeeder.js
-  - [ ] Create seed data for categories from existing frontend data
-  - [ ] Create seed data for deals/promotions from existing frontend data
-  - [ ] Create seed data for coupons from existing frontend data
-  - [ ] Update product seed data to use category IDs
+- [x] Update database seeder in backend/src/utils/dbSeeder.js
+  - [x] Create seed data for categories from existing frontend data
+  - [x] Create seed data for deals/promotions from existing frontend data
+  - [x] Create seed data for coupons from existing frontend data
+  - [x] Update product seed data to use category IDs
 
-- [ ] Ensure backwards compatibility
-  - [ ] Maintain existing API response format
-  - [ ] Add data migration script if needed
+- [x] Ensure backwards compatibility
+  - [x] Maintain existing API response format
+  - [x] Add data migration script if needed
 
 ## Phase 4: Frontend Integration
 

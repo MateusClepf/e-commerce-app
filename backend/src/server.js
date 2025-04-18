@@ -8,6 +8,10 @@ require('dotenv').config();
 const productRoutes = require('./routes/product.routes');
 const authRoutes = require('./routes/auth.routes');
 const orderRoutes = require('./routes/order.routes');
+// Import new routes
+const categoryRoutes = require('./routes/category.routes');
+const dealRoutes = require('./routes/deal.routes');
+const couponRoutes = require('./routes/coupon.routes');
 
 const app = express();
 
@@ -19,6 +23,10 @@ app.use(express.json());
 app.use('/api/products', productRoutes);
 app.use('/api/auth', authRoutes);
 app.use('/api/orders', orderRoutes);
+// Register new routes
+app.use('/api/categories', categoryRoutes);
+app.use('/api/deals', dealRoutes);
+app.use('/api/coupons', couponRoutes);
 
 // Root route
 app.get('/', (req, res) => {
