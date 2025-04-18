@@ -28,6 +28,7 @@ A simple yet functional e-commerce application built with Node.js, Express, Reac
 e-commerce/
 ├── backend/               # Node.js Express backend
 │   ├── config/            # Configuration files
+│   ├── docs/              # API documentation and database schema
 │   ├── src/               # Source code
 │   │   ├── controllers/   # Request handlers
 │   │   ├── models/        # Sequelize models
@@ -47,29 +48,15 @@ e-commerce/
 │   ├── docker-compose.yml # Docker Compose configuration
 │   ├── Dockerfile.frontend # Frontend Dockerfile
 │   └── Dockerfile.backend # Backend Dockerfile
-├── PRD&Implementation/    # Documentation
-│   ├── UX-Redesign-PRD.md # Product Requirements Document
-│   └── UX-Redesign-Implementation-Plan.md # Implementation Plan
 ```
 
-## UX Redesign Project
+## Documentation
 
-The application has undergone a complete frontend redesign to provide a more modern and intuitive user experience.
+All project documentation is available in the repository:
 
-### Implementation Progress
-
-The UX redesign implementation is based on the PRD (Product Requirements Document) and Implementation Plan located in the `PRD&Implementation` directory.
-
-Completed phases:
-- ✅ Phase 1: Setup & Foundation - Tailwind CSS, React Icons, Framer Motion integration
-- ✅ Phase 2: Core Design System Components - Buttons, forms, cards, modals, etc.
-- ✅ Phase 3: Layout Components - Header/navigation, footer redesign
-- ✅ Phase 4: Page Redesigns - Home, Product Listings, Product Detail, Cart, Checkout
-- ✅ Phase 5: Animations & Interactions - Page transitions, micro-interactions, animations
-
-Next phases:
-- Phase 6: Testing & Optimization
-- Phase 7: Finalization
+- **API Documentation**: Detailed API endpoints and usage in `backend/docs/API_DOCUMENTATION.md`
+- **Database Schema**: Database structure and relationships in `backend/docs/DATABASE_SCHEMA.md`
+- **Security**: Security practices and implementation details in `backend/SECURITY.md`
 
 ## Getting Started
 
