@@ -1,6 +1,7 @@
 const swaggerJsdoc = require('swagger-jsdoc');
 const path = require('path');
 const fs = require('fs');
+const YAML = require('yaml');
 
 // Basic information about the API
 const swaggerOptions = {
@@ -40,7 +41,8 @@ const swaggerOptions = {
     './src/routes/*.js',
     './src/models/*.js',
     './src/controllers/*.js',
-    './docs/components.yaml' // For reusable components
+    './docs/components.yaml', // For reusable components
+    './docs/paths.yaml'       // For API paths
   ]
 };
 
@@ -49,7 +51,11 @@ const swaggerSpec = swaggerJsdoc(swaggerOptions);
 
 // Function to write the Swagger spec to a file
 const writeSwaggerJson = () => {
-  const outputPath = path.resolve(__dirname, '../docs/openapi.json');
+  // JSON output path (for backward compatibility)
+  const jsonOutputPath = path.resolve(__dirname, '../docs/openapi.json');
+  
+  // YAML output path (primary format)
+  const yamlOutputPath = path.resolve(__dirname, '../docs/openapi.yaml');
   
   // Create the docs directory if it doesn't exist
   const docsDir = path.resolve(__dirname, '../docs');
@@ -57,14 +63,21 @@ const writeSwaggerJson = () => {
     fs.mkdirSync(docsDir, { recursive: true });
   }
   
-  // Write the Swagger spec to a file
+  // Write the Swagger spec to a YAML file
   fs.writeFileSync(
-    outputPath,
+    yamlOutputPath,
+    YAML.stringify(swaggerSpec),
+    'utf8'
+  );
+  
+  // Also write JSON for backward compatibility
+  fs.writeFileSync(
+    jsonOutputPath,
     JSON.stringify(swaggerSpec, null, 2),
     'utf8'
   );
   
-  console.log(`OpenAPI specification has been written to ${outputPath}`);
+  console.log(`OpenAPI specification has been written to ${yamlOutputPath} and ${jsonOutputPath}`);
 };
 
 module.exports = {

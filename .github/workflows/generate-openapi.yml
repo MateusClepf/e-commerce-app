@@ -11,6 +11,7 @@ on:
       - 'backend/src/models/**'
       - 'backend/config/swagger.js'
       - 'backend/docs/components.yaml'
+      - 'backend/docs/paths.yaml'
 
 jobs:
   generate-openapi:
@@ -37,7 +38,7 @@ jobs:
         run: |
           git config --global user.name 'GitHub Actions'
           git config --global user.email 'actions@github.com'
-          git add backend/docs/openapi.json
+          git add backend/docs/openapi.yaml
           
           # Check if there are any changes to commit
           if git diff --staged --quiet; then

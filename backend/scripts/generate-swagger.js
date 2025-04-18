@@ -1,7 +1,7 @@
 /**
  * Script to generate OpenAPI/Swagger documentation
  * 
- * This script generates a JSON file containing the OpenAPI specification
+ * This script generates a YAML file containing the OpenAPI specification
  * based on JSDoc annotations in the codebase.
  */
 
@@ -54,8 +54,11 @@ const doc = {
   components: components || {}
 };
 
-// Output file
-const outputFile = path.join(__dirname, '../docs/openapi.json');
+// Output JSON file for processing
+const tempOutputFile = path.join(__dirname, '../docs/openapi.temp.json');
+
+// Final YAML output file
+const finalOutputFile = path.join(__dirname, '../docs/openapi.yaml');
 
 // Define route files to include
 const routeFiles = [
@@ -67,9 +70,20 @@ const routeFiles = [
 ];
 
 // Generate OpenAPI document
-swaggerAutogen(outputFile, routeFiles, doc)
+swaggerAutogen(tempOutputFile, routeFiles, doc)
   .then(() => {
-    console.log('OpenAPI schema generated successfully');
+    // Read the generated JSON
+    const jsonContent = fs.readFileSync(tempOutputFile, 'utf8');
+    const jsonData = JSON.parse(jsonContent);
+    
+    // Convert to YAML and write to file
+    const yamlContent = YAML.stringify(jsonData);
+    fs.writeFileSync(finalOutputFile, yamlContent, 'utf8');
+    
+    // Clean up temporary JSON file
+    fs.unlinkSync(tempOutputFile);
+    
+    console.log(`OpenAPI specification has been written to ${finalOutputFile}`);
   })
   .catch((err) => {
     console.error('Error generating OpenAPI schema:', err);
