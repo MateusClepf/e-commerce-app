@@ -1,0 +1,1050 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "title": "E-Commerce API",
+    "description": "API Documentation for the E-Commerce Application",
+    "version": "1.0.0",
+    "contact": {
+      "name": "API Support",
+      "email": "support@example.com"
+    },
+    "license": {
+      "name": "MIT",
+      "url": "https://opensource.org/licenses/MIT"
+    }
+  },
+  "host": "localhost:3001",
+  "basePath": "/",
+  "schemes": [
+    "http",
+    "https"
+  ],
+  "securityDefinitions": {
+    "bearerAuth": {
+      "type": "http",
+      "scheme": "bearer",
+      "bearerFormat": "JWT"
+    }
+  },
+  "consumes": [
+    "application/json"
+  ],
+  "produces": [
+    "application/json"
+  ],
+  "paths": {
+    "/register": {
+      "post": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "email": {
+                  "example": "any"
+                },
+                "password": {
+                  "example": "any"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Created"
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/login": {
+      "post": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "email": {
+                  "example": "any"
+                },
+                "password": {
+                  "example": "any"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/social-login": {
+      "post": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "email": {
+                  "example": "any"
+                },
+                "firstName": {
+                  "example": "any"
+                },
+                "lastName": {
+                  "example": "any"
+                },
+                "provider": {
+                  "example": "any"
+                },
+                "accessToken": {
+                  "example": "any"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/forgot-password": {
+      "post": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "email": {
+                  "example": "any"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/reset-password": {
+      "post": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "token": {
+                  "example": "any"
+                },
+                "password": {
+                  "example": "any"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/profile": {
+      "get": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "x-access-token",
+            "in": "header",
+            "type": "string"
+          },
+          {
+            "name": "authorization",
+            "in": "header",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "404": {
+            "description": "Not Found"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      },
+      "put": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "x-access-token",
+            "in": "header",
+            "type": "string"
+          },
+          {
+            "name": "authorization",
+            "in": "header",
+            "type": "string"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "name": {
+                  "example": "any"
+                },
+                "email": {
+                  "example": "any"
+                },
+                "newPassword": {
+                  "example": "any"
+                },
+                "currentPassword": {
+                  "example": "any"
+                },
+                "address": {
+                  "example": "any"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "404": {
+            "description": "Not Found"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/": {
+      "get": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "authorization",
+            "in": "header",
+            "type": "string"
+          },
+          {
+            "name": "cache-control",
+            "in": "header",
+            "type": "string"
+          },
+          {
+            "name": "code",
+            "in": "query",
+            "type": "string"
+          },
+          {
+            "name": "active",
+            "in": "query",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "404": {
+            "description": "Not Found"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      },
+      "post": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "authorization",
+            "in": "header",
+            "type": "string"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "code": {
+                  "example": "any"
+                },
+                "discount": {
+                  "example": "any"
+                },
+                "type": {
+                  "example": "any"
+                },
+                "maxDiscount": {
+                  "example": "any"
+                },
+                "startDate": {
+                  "example": "any"
+                },
+                "endDate": {
+                  "example": "any"
+                },
+                "active": {
+                  "example": "any"
+                },
+                "usageLimit": {
+                  "example": "any"
+                },
+                "minimumPurchase": {
+                  "example": "any"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Created"
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "404": {
+            "description": "Not Found"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/{id}": {
+      "get": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "cache-control",
+            "in": "header",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "404": {
+            "description": "Not Found"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      },
+      "put": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "authorization",
+            "in": "header",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "404": {
+            "description": "Not Found"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      },
+      "delete": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "authorization",
+            "in": "header",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "204": {
+            "description": "No Content"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "404": {
+            "description": "Not Found"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/guest/{id}/{email}": {
+      "get": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "email",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "404": {
+            "description": "Not Found"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/active": {
+      "get": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "cache-control",
+            "in": "header",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/validate/{code}": {
+      "get": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "code",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "cache-control",
+            "in": "header",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "404": {
+            "description": "Not Found"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "openapi": "3.0.0",
+    "components": {
+      "schemas": {
+        "User": {
+          "type": "object",
+          "required": [
+            "id",
+            "email",
+            "username"
+          ],
+          "properties": {
+            "id": {
+              "type": "string",
+              "format": "uuid",
+              "description": "Unique identifier for the user"
+            },
+            "email": {
+              "type": "string",
+              "format": "email",
+              "description": "User's email address"
+            },
+            "username": {
+              "type": "string",
+              "description": "User's username"
+            },
+            "firstName": {
+              "type": "string",
+              "description": "User's first name"
+            },
+            "lastName": {
+              "type": "string",
+              "description": "User's last name"
+            },
+            "phone": {
+              "type": "string",
+              "description": "User's phone number"
+            },
+            "isAdmin": {
+              "type": "boolean",
+              "default": false,
+              "description": "Whether the user has admin privileges"
+            },
+            "createdAt": {
+              "type": "string",
+              "format": "date-time",
+              "description": "When the user was created"
+            },
+            "updatedAt": {
+              "type": "string",
+              "format": "date-time",
+              "description": "When the user was last updated"
+            }
+          }
+        },
+        "UserCredentials": {
+          "type": "object",
+          "required": [
+            "email",
+            "password"
+          ],
+          "properties": {
+            "email": {
+              "type": "string",
+              "format": "email"
+            },
+            "password": {
+              "type": "string",
+              "format": "password"
+            }
+          }
+        },
+        "Product": {
+          "type": "object",
+          "required": [
+            "id",
+            "name",
+            "price"
+          ],
+          "properties": {
+            "id": {
+              "type": "string",
+              "format": "uuid",
+              "description": "Unique identifier for the product"
+            },
+            "name": {
+              "type": "string",
+              "description": "Product name"
+            },
+            "description": {
+              "type": "string",
+              "description": "Product description"
+            },
+            "price": {
+              "type": "number",
+              "format": "float",
+              "description": "Product price"
+            },
+            "category": {
+              "type": "string",
+              "description": "Product category"
+            },
+            "images": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "format": "uri"
+              },
+              "description": "URLs to product images"
+            },
+            "inStock": {
+              "type": "boolean",
+              "default": true,
+              "description": "Whether the product is in stock"
+            },
+            "quantity": {
+              "type": "integer",
+              "minimum": 0,
+              "description": "Available quantity"
+            },
+            "createdAt": {
+              "type": "string",
+              "format": "date-time",
+              "description": "When the product was created"
+            },
+            "updatedAt": {
+              "type": "string",
+              "format": "date-time",
+              "description": "When the product was last updated"
+            }
+          }
+        },
+        "ProductList": {
+          "type": "object",
+          "properties": {
+            "items": {
+              "type": "array",
+              "items": {
+                "$ref": "#/components/schemas/Product"
+              }
+            },
+            "total": {
+              "type": "integer",
+              "description": "Total number of products available"
+            },
+            "page": {
+              "type": "integer",
+              "description": "Current page number"
+            },
+            "limit": {
+              "type": "integer",
+              "description": "Number of items per page"
+            }
+          }
+        },
+        "Order": {
+          "type": "object",
+          "required": [
+            "id",
+            "userId",
+            "items",
+            "totalAmount",
+            "status"
+          ],
+          "properties": {
+            "id": {
+              "type": "string",
+              "format": "uuid",
+              "description": "Unique identifier for the order"
+            },
+            "userId": {
+              "type": "string",
+              "format": "uuid",
+              "description": "ID of the user who placed the order"
+            },
+            "items": {
+              "type": "array",
+              "items": {
+                "$ref": "#/components/schemas/OrderItem"
+              }
+            },
+            "totalAmount": {
+              "type": "number",
+              "format": "float",
+              "description": "Total amount of the order"
+            },
+            "status": {
+              "type": "string",
+              "enum": [
+                "pending",
+                "processing",
+                "shipped",
+                "delivered",
+                "cancelled"
+              ],
+              "description": "Current status of the order"
+            },
+            "shippingAddress": {
+              "$ref": "#/components/schemas/Address"
+            },
+            "billingAddress": {
+              "$ref": "#/components/schemas/Address"
+            },
+            "paymentMethod": {
+              "type": "string",
+              "enum": [
+                "credit_card",
+                "debit_card",
+                "paypal"
+              ],
+              "description": "Payment method used"
+            },
+            "createdAt": {
+              "type": "string",
+              "format": "date-time",
+              "description": "When the order was created"
+            },
+            "updatedAt": {
+              "type": "string",
+              "format": "date-time",
+              "description": "When the order was last updated"
+            }
+          }
+        },
+        "Error": {
+          "type": "object",
+          "required": [
+            "code",
+            "message"
+          ],
+          "properties": {
+            "code": {
+              "type": "integer",
+              "format": "int32",
+              "description": "Error code"
+            },
+            "message": {
+              "type": "string",
+              "description": "Error message"
+            }
+          }
+        },
+        "OrderItem": {
+          "type": "object",
+          "required": [
+            "productId",
+            "quantity",
+            "price"
+          ],
+          "properties": {
+            "productId": {
+              "type": "string",
+              "format": "uuid",
+              "description": "ID of the product"
+            },
+            "name": {
+              "type": "string",
+              "description": "Product name at time of order"
+            },
+            "quantity": {
+              "type": "integer",
+              "minimum": 1,
+              "description": "Quantity ordered"
+            },
+            "price": {
+              "type": "number",
+              "format": "float",
+              "description": "Price per unit at time of order"
+            },
+            "totalPrice": {
+              "type": "number",
+              "format": "float",
+              "description": "Total price for this item (quantity * price)"
+            }
+          }
+        },
+        "Cart": {
+          "type": "object",
+          "required": [
+            "id",
+            "userId",
+            "items"
+          ],
+          "properties": {
+            "id": {
+              "type": "string",
+              "format": "uuid",
+              "description": "Unique identifier for the cart"
+            },
+            "userId": {
+              "type": "string",
+              "format": "uuid",
+              "description": "ID of the user who owns the cart"
+            },
+            "items": {
+              "type": "array",
+              "items": {
+                "$ref": "#/components/schemas/CartItem"
+              }
+            },
+            "totalAmount": {
+              "type": "number",
+              "format": "float",
+              "description": "Total amount of items in cart"
+            },
+            "createdAt": {
+              "type": "string",
+              "format": "date-time",
+              "description": "When the cart was created"
+            },
+            "updatedAt": {
+              "type": "string",
+              "format": "date-time",
+              "description": "When the cart was last updated"
+            }
+          }
+        },
+        "CartItem": {
+          "type": "object",
+          "required": [
+            "productId",
+            "quantity"
+          ],
+          "properties": {
+            "productId": {
+              "type": "string",
+              "format": "uuid",
+              "description": "ID of the product"
+            },
+            "product": {
+              "$ref": "#/components/schemas/Product"
+            },
+            "quantity": {
+              "type": "integer",
+              "minimum": 1,
+              "description": "Quantity in cart"
+            }
+          }
+        },
+        "Address": {
+          "type": "object",
+          "required": [
+            "street",
+            "city",
+            "zipCode",
+            "country"
+          ],
+          "properties": {
+            "street": {
+              "type": "string",
+              "description": "Street address"
+            },
+            "city": {
+              "type": "string",
+              "description": "City"
+            },
+            "state": {
+              "type": "string",
+              "description": "State or province"
+            },
+            "zipCode": {
+              "type": "string",
+              "description": "ZIP or postal code"
+            },
+            "country": {
+              "type": "string",
+              "description": "Country"
+            }
+          }
+        },
+        "Token": {
+          "type": "object",
+          "required": [
+            "accessToken",
+            "tokenType"
+          ],
+          "properties": {
+            "accessToken": {
+              "type": "string",
+              "description": "JWT access token"
+            },
+            "tokenType": {
+              "type": "string",
+              "enum": [
+                "bearer"
+              ],
+              "description": "Type of token"
+            },
+            "expiresIn": {
+              "type": "integer",
+              "description": "Token expiration time in seconds"
+            },
+            "refreshToken": {
+              "type": "string",
+              "description": "Refresh token to get a new access token"
+            }
+          }
+        }
+      },
+      "parameters": {
+        "offsetParam": {
+          "name": "offset",
+          "in": "query",
+          "description": "Number of items to skip before returning the results",
+          "schema": {
+            "type": "integer",
+            "default": 0
+          }
+        },
+        "limitParam": {
+          "name": "limit",
+          "in": "query",
+          "description": "Maximum number of items to return",
+          "schema": {
+            "type": "integer",
+            "default": 10
+          }
+        }
+      },
+      "responses": {
+        "Unauthorized": {
+          "description": "Authentication information is missing or invalid",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Error"
+              }
+            }
+          }
+        },
+        "NotFound": {
+          "description": "The specified resource was not found",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Error"
+              }
+            }
+          }
+        },
+        "BadRequest": {
+          "description": "The request contains invalid parameters or payload",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Error"
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
