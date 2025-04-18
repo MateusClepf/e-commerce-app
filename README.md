@@ -54,7 +54,10 @@ e-commerce/
 
 All project documentation is available in the repository:
 
-- **API Documentation**: Detailed API endpoints and usage in [backend/docs/API_DOCUMENTATION.md](backend/docs/API_DOCUMENTATION.md)
+- **API Documentation**: 
+  - OpenAPI specification in [backend/docs/openapi.yaml](backend/docs/openapi.yaml)
+  - Interactive documentation when running the server at http://localhost:5000/api-docs
+  - See [backend/docs/README.md](backend/docs/README.md) for more information on the API documentation
 - **Database Schema**: Database structure and relationships in [backend/docs/DATABASE_SCHEMA.md](backend/docs/DATABASE_SCHEMA.md)
 - **Security**: Security practices and implementation details in [backend/SECURITY.md](backend/SECURITY.md)
 
@@ -141,6 +144,15 @@ docker-compose -f docker/docker-compose.yml down -v
 
 ## API Endpoints
 
+The API provides endpoints for products, authentication, users, orders, and shopping cart functionality. 
+
+For comprehensive documentation on all available endpoints, request/response formats, and authentication requirements:
+
+- See the OpenAPI specification in [backend/docs/openapi.yaml](backend/docs/openapi.yaml)
+- Access the interactive Swagger UI documentation at http://localhost:5000/api-docs when running the server
+
+Key endpoints include:
+
 ### Products
 - `GET /api/products` - Get all products
 - `GET /api/products/:id` - Get a specific product
@@ -158,6 +170,24 @@ docker-compose -f docker/docker-compose.yml down -v
 - `GET /api/orders` - Get all orders for the user (authenticated)
 - `GET /api/orders/:id` - Get a specific order (authenticated)
 - `GET /api/orders/guest/:id/:email` - Get order by ID for guest
+
+## API Documentation
+
+The API documentation is generated automatically using OpenAPI/Swagger:
+
+- **Manual Generation**: Run `npm run swagger-generate` in the backend directory
+- **Automatic Generation**: A pre-commit hook ensures the documentation is updated with each commit
+- **CI/CD Integration**: GitHub Actions automatically updates the OpenAPI schema when changes are made to routes, controllers, or models
+
+The documentation includes:
+- Complete schema definitions for all data models
+- Detailed endpoint descriptions with parameters, request bodies, and responses
+- Authentication requirements for each endpoint
+- Example requests and responses
+
+To view the documentation locally:
+1. Start the backend server
+2. Visit http://localhost:5000/api-docs in your browser
 
 ## License
 

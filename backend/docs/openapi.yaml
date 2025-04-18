@@ -1,0 +1,46 @@
+openapi: 3.0.0
+info:
+  title: E-Commerce API
+  description: API for an e-commerce application with user authentication, product management, orders, and shopping cart functionality
+  version: 1.0.0
+  contact:
+    name: E-Commerce API Support
+    email: support@ecommerce-api.com
+servers:
+  - url: https://api.ecommerce-app.com
+    description: Production server
+  - url: https://staging-api.ecommerce-app.com
+    description: Staging server
+  - url: http://localhost:3000
+    description: Local development server
+
+tags:
+  - name: Authentication
+    description: User authentication operations
+  - name: Products
+    description: Product management operations
+  - name: Users
+    description: User management operations
+  - name: Orders
+    description: Order management operations
+  - name: Cart
+    description: Shopping cart operations
+
+security:
+  - bearerAuth: []
+
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+      description: JWT Authorization header using the Bearer scheme
+
+# Import components
+  schemas:
+    $ref: './components.yaml#/components/schemas'
+
+# Import paths
+paths:
+  $ref: './paths.yaml#/paths' 
