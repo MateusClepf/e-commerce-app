@@ -33,7 +33,7 @@ exports.findAll = async (req, res) => {
     
     // Filter by string category (backward compatibility)
     if (category) {
-      condition.category = category;
+      condition.categoryName = category;
     }
     
     // Filter by category ID (new relationship)
@@ -97,6 +97,7 @@ exports.findAll = async (req, res) => {
       include: [
         {
           model: Category,
+          as: 'category',
           attributes: ['id', 'name', 'icon', 'bgColor'],
           required: false
         }
@@ -128,6 +129,7 @@ exports.findOne = async (req, res) => {
       include: [
         {
           model: Category,
+          as: 'category',
           attributes: ['id', 'name', 'icon', 'bgColor'],
           required: false
         }
@@ -161,6 +163,7 @@ exports.update = async (req, res) => {
       include: [
         {
           model: Category,
+          as: 'category',
           attributes: ['id', 'name', 'icon', 'bgColor'],
           required: false
         }

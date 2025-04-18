@@ -39,7 +39,7 @@ db.OrderItem.belongsTo(db.Product, { foreignKey: 'productId' });
 db.Product.hasMany(db.OrderItem, { foreignKey: 'productId' });
 
 // New association: Category has many Products
-db.Category.hasMany(db.Product, { foreignKey: 'categoryId' });
-db.Product.belongsTo(db.Category, { foreignKey: 'categoryId' });
+db.Category.hasMany(db.Product, { foreignKey: 'categoryId', as: 'products' });
+db.Product.belongsTo(db.Category, { foreignKey: 'categoryId', as: 'category' });
 
 module.exports = db;

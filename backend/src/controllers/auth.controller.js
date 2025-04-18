@@ -228,3 +228,53 @@ exports.socialLogin = async (req, res) => {
     return res.status(500).json({ message: error.message });
   }
 };
+
+// Update user profile
+exports.updateProfile = async (req, res) => {
+  try {
+    const user = await User.findByPk(req.userId);
+    if (!user) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+
+    const updates = {};
+
+    // Handle optional fields
+    if (req.body.name) updates.name = req.body.name;
+    if (req.body.email) updates.email = req.body.email;
+    
+    // If updating password, verify current password first
+    if (req.body.newPassword) {
+      if (!req.body.currentPassword) {
+        return res.status(400).json({ message: 'Current password is required to set a new password' });
+      }
+      
+      const isPasswordValid = await bcrypt.compare(req.body.currentPassword, user.password);
+      if (!isPasswordValid) {
+        return res.status(401).json({ message: 'Current password is incorrect' });
+      }
+      
+      // Hash the new password
+      updates.password = await bcrypt.hash(req.body.newPassword, 10);
+    }
+    
+    // Handle address updates if provided
+    if (req.body.address) {
+      updates.address = req.body.address;
+    }
+
+    // Update the user
+    await User.update(updates, { where: { id: req.userId } });
+    
+    // Get updated user
+    const updatedUser = await User.findByPk(req.userId);
+    const { password, resetToken, resetTokenExpiry, ...userWithoutSensitiveInfo } = updatedUser.toJSON();
+    
+    return res.status(200).json({
+      message: 'Profile updated successfully',
+      user: userWithoutSensitiveInfo
+    });
+  } catch (error) {
+    return res.status(500).json({ message: error.message });
+  }
+};

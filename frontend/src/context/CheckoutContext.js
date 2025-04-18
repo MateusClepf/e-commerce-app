@@ -4,7 +4,7 @@ import { CartContext } from './CartContext';
 export const CheckoutContext = createContext();
 
 export const CheckoutProvider = ({ children }) => {
-  const { cartItems, getTotalPrice, clearCart } = useContext(CartContext);
+  const { cartItems, getTotalPrice, getOriginalTotal, getDiscountAmount, appliedCoupon, clearCart } = useContext(CartContext);
   
   // Checkout steps
   const STEPS = {
@@ -167,11 +167,26 @@ export const CheckoutProvider = ({ children }) => {
     return method ? method.price : 0;
   };
   
-  // Calculate order total (including delivery)
+  // Calculate order total (including delivery and discount)
   const getOrderTotal = () => {
-    const subtotal = parseFloat(getTotalPrice());
+    const subtotal = parseFloat(getTotalPrice()); // This already includes the discount
     const deliveryCost = getDeliveryCost();
     return (subtotal + deliveryCost).toFixed(2);
+  };
+  
+  // Get the coupon details for order summary
+  const getCouponDetails = () => {
+    return appliedCoupon;
+  };
+  
+  // Get the discount amount for display
+  const getAppliedDiscount = () => {
+    return getDiscountAmount();
+  };
+  
+  // Check if a coupon is applied
+  const isCouponApplied = () => {
+    return !!appliedCoupon;
   };
   
   // Place order
@@ -186,8 +201,10 @@ export const CheckoutProvider = ({ children }) => {
         const orderData = {
           ...formData,
           items: cartItems,
-          subtotal: getTotalPrice(),
+          subtotal: getOriginalTotal(),
           deliveryCost: getDeliveryCost(),
+          couponCode: appliedCoupon ? appliedCoupon.code : null,
+          discountAmount: getDiscountAmount().toFixed(2),
           total: getOrderTotal(),
           orderDate: new Date().toISOString(),
           orderNumber: `ORD-${Math.floor(Math.random() * 10000).toString().padStart(4, '0')}`
@@ -248,19 +265,30 @@ export const CheckoutProvider = ({ children }) => {
       formData,
       setFormData,
       handleChange,
+      
+      // Validation
       errors,
+      setErrors,
+      validateStep,
       
-      // Shipping & payment methods
-      deliveryMethods,
-      paymentMethods,
-      
-      // Order calculations
-      getDeliveryCost,
-      getOrderTotal,
-      
-      // Order submission
+      // Order processing
       isSubmitting,
       placeOrder,
+      
+      // Delivery methods
+      deliveryMethods,
+      getDeliveryCost,
+      
+      // Payment methods
+      paymentMethods,
+      
+      // Totals and coupon
+      getOrderTotal,
+      getCouponDetails,
+      getAppliedDiscount,
+      isCouponApplied,
+      
+      // Reset
       resetCheckout
     }}>
       {children}

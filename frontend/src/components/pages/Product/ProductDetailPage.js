@@ -40,77 +40,46 @@ const ProductDetailPage = () => {
     const fetchProduct = async () => {
       try {
         setLoading(true);
-        // In a real app, we'd make an API call here
-        // For demonstration, we're using mock data
-        setTimeout(() => {
-          const mockProduct = {
-            id: parseInt(id),
-            name: `Product ${id}`,
-            description: 'This is a detailed product description that explains all the features and benefits of the product. The product is made with high-quality materials and designed to last for years of use.',
-            price: (Math.random() * 100 + 50).toFixed(2),
-            isAvailable: true,
-            stockQuantity: Math.floor(Math.random() * 50) + 1,
-            rating: Math.floor(Math.random() * 5) + 1,
-            reviewCount: Math.floor(Math.random() * 100) + 5,
-            category: ['Electronics', 'Clothing', 'Footwear', 'Home', 'Accessories'][Math.floor(Math.random() * 5)],
-            brand: ['Apple', 'Samsung', 'Nike', 'Adidas', 'Sony'][Math.floor(Math.random() * 5)],
-            images: [
-              `${PLACEHOLDER_URL}/600x600?text=Product+${id}+Image+1`,
-              `${PLACEHOLDER_URL}/600x600?text=Product+${id}+Image+2`,
-              `${PLACEHOLDER_URL}/600x600?text=Product+${id}+Image+3`,
-              `${PLACEHOLDER_URL}/600x600?text=Product+${id}+Image+4`
-            ],
-            specifications: [
-              { name: 'Material', value: 'Premium quality' },
-              { name: 'Size', value: 'Medium' },
-              { name: 'Weight', value: '500g' },
-              { name: 'Dimensions', value: '10 x 15 x 5 cm' },
-              { name: 'Color', value: 'Black' }
-            ],
-            features: [
-              'Durable construction',
-              'Water-resistant',
-              'Easy to clean',
-              'Lightweight design',
-              'Eco-friendly materials'
-            ]
-          };
-          
-          setProduct(mockProduct);
-          
-          // Generate mock related products
-          const mockRelated = Array(4).fill(null).map((_, i) => ({
-            id: 100 + i,
-            name: `Related Product ${i + 1}`,
-            description: 'This is a sample product description.',
-            price: (Math.random() * 80 + 20).toFixed(2),
-            imageUrl: `${PLACEHOLDER_URL}/300x300?text=Related+${i + 1}`,
-            isAvailable: Math.random() > 0.2,
-            stockQuantity: Math.floor(Math.random() * 20),
-            rating: Math.floor(Math.random() * 5) + 1,
-            category: mockProduct.category
-          }));
-          
-          setRelatedProducts(mockRelated);
-          
-          // Generate mock reviews
-          const mockReviews = Array(5).fill(null).map((_, i) => ({
-            id: i + 1,
-            user: {
-              name: ['John D.', 'Sarah M.', 'Robert K.', 'Emily W.', 'Michael T.'][i],
-              avatar: `${PLACEHOLDER_URL}/100x100?text=${['JD', 'SM', 'RK', 'EW', 'MT'][i]}`
-            },
-            rating: Math.floor(Math.random() * 5) + 1,
-            date: new Date(Date.now() - Math.random() * 10000000000).toLocaleDateString(),
-            title: ['Great product!', 'Highly recommended', 'Good quality', 'As described', 'Fast shipping'][i],
-            comment: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla facilisi. Sed euismod, nisl nec ultricies tincidunt, nisl nunc aliquet nisl, nec aliquet nisl nisl nec nisl.',
-            helpful: Math.floor(Math.random() * 20),
-            verified: Math.random() > 0.3
-          }));
-          
-          setReviews(mockReviews);
-          setLoading(false);
-        }, 1000);
+        
+        // Fetch product details from API
+        const response = await axios.get(`${API_URL}/products/${id}`);
+        setProduct(response.data);
+        
+        // Fetch related products (same category)
+        const categoryId = response.data.categoryId;
+        let relatedProductsResponse;
+        
+        if (categoryId) {
+          relatedProductsResponse = await axios.get(`${API_URL}/products?categoryId=${categoryId}&limit=4`);
+        } else if (response.data.category) {
+          // Backward compatibility
+          relatedProductsResponse = await axios.get(`${API_URL}/products?category=${response.data.category}&limit=4`);
+        } else {
+          // Just get some random products
+          relatedProductsResponse = await axios.get(`${API_URL}/products?limit=4`);
+        }
+        
+        // Filter out the current product from related products
+        const filteredRelated = relatedProductsResponse.data.products.filter(p => p.id !== id);
+        setRelatedProducts(filteredRelated || []);
+        
+        // Generate mock reviews (these could come from an API in the future)
+        const mockReviews = Array(5).fill(null).map((_, i) => ({
+          id: i + 1,
+          user: {
+            name: ['John D.', 'Sarah M.', 'Robert K.', 'Emily W.', 'Michael T.'][i],
+            avatar: `${PLACEHOLDER_URL}/100x100?text=${['JD', 'SM', 'RK', 'EW', 'MT'][i]}`
+          },
+          rating: Math.floor(Math.random() * 5) + 1,
+          date: new Date(Date.now() - Math.random() * 10000000000).toLocaleDateString(),
+          title: ['Great product!', 'Highly recommended', 'Good quality', 'As described', 'Fast shipping'][i],
+          comment: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla facilisi. Sed euismod, nisl nec ultricies tincidunt, nisl nunc aliquet nisl, nec aliquet nisl nisl nec nisl.',
+          helpful: Math.floor(Math.random() * 20),
+          verified: Math.random() > 0.3
+        }));
+        
+        setReviews(mockReviews);
+        setLoading(false);
       } catch (err) {
         setError('Failed to fetch product details');
         setLoading(false);
@@ -121,7 +90,7 @@ const ProductDetailPage = () => {
     // Reset active image and scroll to top when product ID changes
     setActiveImage(0);
     window.scrollTo(0, 0);
-  }, [id, PLACEHOLDER_URL]);
+  }, [id, API_URL, PLACEHOLDER_URL]);
   
   const handleQuantityChange = (e) => {
     const value = parseInt(e.target.value);
@@ -167,7 +136,7 @@ const ProductDetailPage = () => {
       />
     ));
   };
-
+  
   if (loading) {
     return (
       <PageTransition>
@@ -231,7 +200,7 @@ const ProductDetailPage = () => {
       </PageTransition>
     );
   }
-
+  
   return (
     <PageTransition>
       <div className="pt-24 pb-12">
@@ -320,8 +289,8 @@ const ProductDetailPage = () => {
                   <button className="text-gray-400 hover:text-primary p-1">
                     <FiShare2 className="w-5 h-5" />
                   </button>
-                </div>
-                
+        </div>
+        
                 {/* Brand */}
                 <p className="text-gray-500 mb-4">
                   Brand: <span className="text-primary">{product.brand}</span>
@@ -344,24 +313,24 @@ const ProductDetailPage = () => {
                 
                 {/* Availability */}
                 <div className="mb-6">
-                  {product.isAvailable && product.stockQuantity > 0 ? (
+            {product.isAvailable && product.stockQuantity > 0 ? (
                     <span className="inline-flex items-center text-sm text-green-500">
                       <span className="w-2 h-2 bg-green-500 rounded-full mr-2"></span>
                       In Stock ({product.stockQuantity} available)
                     </span>
-                  ) : (
+            ) : (
                     <span className="inline-flex items-center text-sm text-red-500">
                       <span className="w-2 h-2 bg-red-500 rounded-full mr-2"></span>
                       Out of Stock
                     </span>
-                  )}
-                </div>
-                
+            )}
+          </div>
+          
                 {/* Short Description */}
                 <p className="text-gray-600 mb-6">{product.description.substring(0, 150)}...</p>
                 
                 {/* Actions */}
-                {product.isAvailable && product.stockQuantity > 0 && (
+          {product.isAvailable && product.stockQuantity > 0 && (
                   <div className="space-y-4 mb-6">
                     <div className="flex items-center">
                       <div className="flex items-center border rounded-l-md">
@@ -372,12 +341,12 @@ const ProductDetailPage = () => {
                         >
                           <FiMinus className="w-4 h-4" />
                         </button>
-                        <input
-                          type="number"
+                <input 
+                  type="number" 
                           value={quantity}
                           onChange={handleQuantityChange}
-                          min="1"
-                          max={product.stockQuantity}
+                  min="1" 
+                  max={product.stockQuantity} 
                           className="w-16 border-0 text-center focus:ring-0"
                         />
                         <button 
@@ -424,8 +393,8 @@ const ProductDetailPage = () => {
               </div>
             </div>
           </div>
-        </div>
-        
+              </div>
+              
         {/* Product Tabs */}
         <div className="bg-white rounded-lg shadow-card overflow-hidden mb-12">
           <div className="border-b">

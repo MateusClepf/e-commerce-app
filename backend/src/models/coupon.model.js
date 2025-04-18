@@ -11,7 +11,8 @@ module.exports = (sequelize, DataTypes) => {
       unique: true,
       validate: {
         notEmpty: true
-      }
+      },
+      index: true
     },
     discount: {
       type: DataTypes.DECIMAL(10, 2),
@@ -30,15 +31,18 @@ module.exports = (sequelize, DataTypes) => {
     },
     startDate: {
       type: DataTypes.DATE,
-      allowNull: true
+      allowNull: true,
+      index: true
     },
     endDate: {
       type: DataTypes.DATE,
-      allowNull: true
+      allowNull: true,
+      index: true
     },
     active: {
       type: DataTypes.BOOLEAN,
-      defaultValue: true
+      defaultValue: true,
+      index: true
     },
     usageLimit: {
       type: DataTypes.INTEGER,
@@ -49,6 +53,13 @@ module.exports = (sequelize, DataTypes) => {
       allowNull: true,
       defaultValue: 0
     }
+  }, {
+    indexes: [
+      {
+        name: 'coupon_code_active_dates_idx',
+        fields: ['code', 'active', 'startDate', 'endDate']
+      }
+    ]
   });
 
   return Coupon;

@@ -10,7 +10,9 @@ import './ProductsPage.css';
 
 const ProductsPage = () => {
   const [products, setProducts] = useState([]);
+  const [categories, setCategories] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [loadingCategories, setLoadingCategories] = useState(true);
   const [error, setError] = useState(null);
   const [isFiltersOpen, setIsFiltersOpen] = useState(false);
   const [filtersApplied, setFiltersApplied] = useState(false);
@@ -18,10 +20,13 @@ const ProductsPage = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
   const [filters, setFilters] = useState({
-    category: '',
+    categoryId: '',
+    category: '', // For backward compatibility
     minPrice: '',
     maxPrice: '',
     rating: '',
+    isOnSale: '',
+    newArrival: '',
     sort: 'newest' // newest, price-low-high, price-high-low, popular
   });
   
@@ -33,49 +38,52 @@ const ProductsPage = () => {
   const PLACEHOLDER_URL = process.env.REACT_APP_PLACEHOLDER_IMAGE_URL || 'https://via.placeholder.com';
   const itemsPerPage = 12;
   
-  // Extract filters from URL query params
+  // Extract query params on initial load and route changes
   useEffect(() => {
     const params = new URLSearchParams(location.search);
-    const newFilters = { ...filters };
-    let hasFilters = false;
     
-    if (params.has('category')) {
-      newFilters.category = params.get('category');
-      hasFilters = true;
-    }
+    setFilters(prev => ({
+      ...prev,
+      categoryId: params.get('categoryId') || '',
+      category: params.get('category') || '',
+      minPrice: params.get('minPrice') || '',
+      maxPrice: params.get('maxPrice') || '',
+      rating: params.get('rating') || '',
+      isOnSale: params.get('isOnSale') || '',
+      newArrival: params.get('newArrival') || '',
+      sort: params.get('sort') || 'newest'
+    }));
     
-    if (params.has('minPrice')) {
-      newFilters.minPrice = params.get('minPrice');
-      hasFilters = true;
-    }
+    setCurrentPage(parseInt(params.get('page') || '1', 10));
     
-    if (params.has('maxPrice')) {
-      newFilters.maxPrice = params.get('maxPrice');
-      hasFilters = true;
-    }
-    
-    if (params.has('rating')) {
-      newFilters.rating = params.get('rating');
-      hasFilters = true;
-    }
-    
-    if (params.has('sort')) {
-      newFilters.sort = params.get('sort');
-    }
-    
-    if (params.has('page')) {
-      setCurrentPage(parseInt(params.get('page'), 10));
-    } else {
-      setCurrentPage(1);
-    }
-    
-    if (params.has('view')) {
-      setViewMode(params.get('view'));
-    }
-    
-    setFilters(newFilters);
+    // Check if any filters are applied
+    const hasFilters = !!params.get('categoryId') || 
+                       !!params.get('category') ||
+                       !!params.get('minPrice') ||
+                       !!params.get('maxPrice') ||
+                       !!params.get('rating') ||
+                       !!params.get('isOnSale') ||
+                       !!params.get('newArrival');
+                       
     setFiltersApplied(hasFilters);
   }, [location.search]);
+  
+  // Fetch categories for filter dropdown
+  useEffect(() => {
+    const fetchCategories = async () => {
+      try {
+        setLoadingCategories(true);
+        const response = await axios.get(`${API_URL}/categories?active=true`);
+        setCategories(response.data || []);
+        setLoadingCategories(false);
+      } catch (err) {
+        console.error('Failed to fetch categories:', err);
+        setLoadingCategories(false);
+      }
+    };
+    
+    fetchCategories();
+  }, [API_URL]);
   
   // Fetch products
   useEffect(() => {
@@ -84,82 +92,29 @@ const ProductsPage = () => {
         setLoading(true);
         
         const params = new URLSearchParams();
-        if (filters.category) params.append('category', filters.category);
+        if (filters.categoryId) params.append('categoryId', filters.categoryId);
+        if (filters.category) params.append('category', filters.category); // For backward compatibility
         if (filters.minPrice) params.append('minPrice', filters.minPrice);
         if (filters.maxPrice) params.append('maxPrice', filters.maxPrice);
         if (filters.rating) params.append('rating', filters.rating);
+        if (filters.isOnSale === 'true') params.append('isOnSale', 'true');
+        if (filters.newArrival === 'true') params.append('newArrival', 'true');
         params.append('sort', filters.sort);
         params.append('page', currentPage);
         params.append('limit', itemsPerPage);
         
         const url = `${API_URL}/products?${params.toString()}`;
         
-        // Simulate API call with delay
-        setTimeout(async () => {
-          // In a real app, we would use the actual API response
-          // Here we're just using mock data
-          const mockProducts = Array(24).fill(null).map((_, i) => ({
-            id: i + 1,
-            name: `Product ${i + 1}`,
-            description: 'This is a sample product description that explains the features and benefits of the product.',
-            price: (Math.random() * 100 + 10).toFixed(2),
-            imageUrl: `${PLACEHOLDER_URL}/300x300?text=Product+${i + 1}`,
-            isAvailable: Math.random() > 0.2,
-            stockQuantity: Math.floor(Math.random() * 20),
-            rating: Math.floor(Math.random() * 5) + 1,
-            category: ['Electronics', 'Clothing', 'Footwear', 'Home', 'Accessories'][Math.floor(Math.random() * 5)]
-          }));
-          
-          // Filter products based on URL params
-          let filteredProducts = [...mockProducts];
-          
-          if (filters.category) {
-            filteredProducts = filteredProducts.filter(p => p.category === filters.category);
-          }
-          
-          if (filters.minPrice) {
-            filteredProducts = filteredProducts.filter(p => parseFloat(p.price) >= parseFloat(filters.minPrice));
-          }
-          
-          if (filters.maxPrice) {
-            filteredProducts = filteredProducts.filter(p => parseFloat(p.price) <= parseFloat(filters.maxPrice));
-          }
-          
-          if (filters.rating) {
-            filteredProducts = filteredProducts.filter(p => p.rating >= parseInt(filters.rating, 10));
-          }
-          
-          // Sort products
-          switch (filters.sort) {
-            case 'price-low-high':
-              filteredProducts.sort((a, b) => parseFloat(a.price) - parseFloat(b.price));
-              break;
-            case 'price-high-low':
-              filteredProducts.sort((a, b) => parseFloat(b.price) - parseFloat(a.price));
-              break;
-            case 'popular':
-              filteredProducts.sort((a, b) => b.rating - a.rating);
-              break;
-            default: // newest
-              filteredProducts.sort((a, b) => b.id - a.id);
-          }
-          
-          // Paginate results
-          const total = Math.ceil(filteredProducts.length / itemsPerPage);
-          setTotalPages(total);
-          
-          // Ensure currentPage is within valid range
-          const validPage = Math.max(1, Math.min(currentPage, total));
-          if (validPage !== currentPage) {
-            setCurrentPage(validPage);
-          }
-          
-          const start = (validPage - 1) * itemsPerPage;
-          const paginatedProducts = filteredProducts.slice(start, start + itemsPerPage);
-          
-          setProducts(paginatedProducts);
-          setLoading(false);
-        }, 800); // Simulating network delay
+        // Make the actual API call
+        const response = await axios.get(url);
+        
+        // Process the response
+        if (response.data) {
+          setProducts(response.data.products || []);
+          setTotalPages(response.data.pagination?.totalPages || 1);
+        }
+        
+        setLoading(false);
       } catch (err) {
         setError('Failed to fetch products');
         setLoading(false);
@@ -167,7 +122,7 @@ const ProductsPage = () => {
     };
     
     fetchProducts();
-  }, [API_URL, PLACEHOLDER_URL, filters, currentPage, itemsPerPage]);
+  }, [API_URL, filters, currentPage, itemsPerPage]);
   
   // Handle filter changes
   const handleFilterChange = (e) => {
@@ -176,60 +131,110 @@ const ProductsPage = () => {
       ...prev,
       [name]: value
     }));
+    
+    // Reset to page 1 when filters change
+    setCurrentPage(1);
+    
+    // Update URL without triggering a page reload
+    const params = new URLSearchParams(location.search);
+    
+    if (value) {
+      params.set(name, value);
+    } else {
+      params.delete(name);
+    }
+    
+    params.set('page', '1');
+    navigate(`${location.pathname}?${params.toString()}`);
   };
   
-  // Apply filters to URL
-  const applyFilters = () => {
-    const params = new URLSearchParams();
+  // Handle checkbox filters
+  const handleCheckboxChange = (e) => {
+    const { name, checked } = e.target;
+    setFilters(prev => ({
+      ...prev,
+      [name]: checked ? 'true' : ''
+    }));
     
-    if (filters.category) params.append('category', filters.category);
-    if (filters.minPrice) params.append('minPrice', filters.minPrice);
-    if (filters.maxPrice) params.append('maxPrice', filters.maxPrice);
-    if (filters.rating) params.append('rating', filters.rating);
-    params.append('sort', filters.sort);
-    params.append('view', viewMode);
-    params.append('page', 1); // Reset to first page when applying new filters
+    // Reset to page 1 when filters change
+    setCurrentPage(1);
     
-    navigate(`/products?${params.toString()}`);
-    setIsFiltersOpen(false);
+    // Update URL without triggering a page reload
+    const params = new URLSearchParams(location.search);
+    
+    if (checked) {
+      params.set(name, 'true');
+    } else {
+      params.delete(name);
+    }
+    
+    params.set('page', '1');
+    navigate(`${location.pathname}?${params.toString()}`);
   };
   
-  // Reset filters
+  // Handle sort change
+  const handleSortChange = (e) => {
+    const value = e.target.value;
+    setFilters(prev => ({
+      ...prev,
+      sort: value
+    }));
+    
+    // Update URL without triggering a page reload
+    const params = new URLSearchParams(location.search);
+    params.set('sort', value);
+    navigate(`${location.pathname}?${params.toString()}`);
+  };
+  
+  // Handle pagination
+  const handlePageChange = (newPage) => {
+    setCurrentPage(newPage);
+    
+    // Update URL without triggering a page reload
+    const params = new URLSearchParams(location.search);
+    params.set('page', newPage.toString());
+    navigate(`${location.pathname}?${params.toString()}`);
+  };
+  
+  // Reset all filters
   const resetFilters = () => {
     setFilters({
+      categoryId: '',
       category: '',
       minPrice: '',
       maxPrice: '',
       rating: '',
+      isOnSale: '',
+      newArrival: '',
       sort: 'newest'
     });
-    navigate('/products');
-    setIsFiltersOpen(false);
-  };
-  
-  // Change page
-  const handlePageChange = (page) => {
-    const params = new URLSearchParams(location.search);
-    params.set('page', page);
-    navigate(`/products?${params.toString()}`);
-  };
-  
-  // Change view mode
-  const handleViewModeChange = (mode) => {
-    setViewMode(mode);
-    const params = new URLSearchParams(location.search);
-    params.set('view', mode);
-    navigate(`/products?${params.toString()}`);
-  };
-  
-  // Change sort order
-  const handleSortChange = (e) => {
-    const sort = e.target.value;
-    setFilters(prev => ({ ...prev, sort }));
     
-    const params = new URLSearchParams(location.search);
-    params.set('sort', sort);
-    navigate(`/products?${params.toString()}`);
+    setCurrentPage(1);
+    navigate('/products');
+  };
+  
+  // Toggle filter sidebar on mobile
+  const toggleFilters = () => {
+    setIsFiltersOpen(!isFiltersOpen);
+  };
+  
+  // Toggle view mode (grid/list)
+  const toggleViewMode = () => {
+    setViewMode(viewMode === 'grid' ? 'list' : 'grid');
+  };
+  
+  // Render star rating filter
+  const renderRatingOptions = () => {
+    return Array(5)
+      .fill(0)
+      .map((_, index) => {
+        const value = 5 - index;
+        return (
+          <option key={value} value={value}>
+            {value} Stars & Up
+          </option>
+        );
+      });
   };
   
   // Pagination component
@@ -329,7 +334,7 @@ const ProductsPage = () => {
       </div>
     );
   };
-
+  
   return (
     <PageTransition>
       <div className="pt-24 pb-12">
@@ -452,22 +457,26 @@ const ProductsPage = () => {
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
                   {/* Category filter */}
                   <div>
-                    <label htmlFor="category" className="block text-sm font-medium text-gray-700 mb-1">
+                    <label htmlFor="categoryId" className="block text-sm font-medium text-gray-700 mb-1">
                       Category
                     </label>
-                    <select
-                      id="category"
-                      name="category"
-                      value={filters.category}
+                    <select 
+                      id="categoryId" 
+                      name="categoryId"
+                      value={filters.categoryId}
                       onChange={handleFilterChange}
                       className="form-control"
                     >
                       <option value="">All Categories</option>
-                      <option value="Electronics">Electronics</option>
-                      <option value="Clothing">Clothing</option>
-                      <option value="Footwear">Footwear</option>
-                      <option value="Home">Home</option>
-                      <option value="Accessories">Accessories</option>
+                      {loadingCategories ? (
+                        <option disabled>Loading categories...</option>
+                      ) : (
+                        categories.map(category => (
+                          <option key={category.id} value={category.id}>
+                            {category.name}
+                          </option>
+                        ))
+                      )}
                     </select>
                   </div>
                   
@@ -513,11 +522,7 @@ const ProductsPage = () => {
                       className="form-control"
                     >
                       <option value="">Any Rating</option>
-                      <option value="5">5 Stars</option>
-                      <option value="4">4+ Stars</option>
-                      <option value="3">3+ Stars</option>
-                      <option value="2">2+ Stars</option>
-                      <option value="1">1+ Star</option>
+                      {renderRatingOptions()}
                     </select>
                   </div>
                   
@@ -548,7 +553,9 @@ const ProductsPage = () => {
                     Reset
                   </button>
                   <button
-                    onClick={applyFilters}
+                    onClick={() => {
+                      // Implement apply filters logic
+                    }}
                     className="btn btn-primary py-2"
                   >
                     Apply Filters
@@ -563,9 +570,9 @@ const ProductsPage = () => {
             <div className="flex flex-wrap items-center gap-2 mb-6">
               <span className="text-sm text-gray-600">Active filters:</span>
               
-              {filters.category && (
+              {filters.categoryId && (
                 <span className="bg-gray-100 text-dark text-sm rounded-full px-3 py-1 flex items-center">
-                  Category: {filters.category}
+                  Category: {filters.categoryId}
                 </span>
               )}
               

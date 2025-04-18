@@ -10,7 +10,8 @@ module.exports = (sequelize, DataTypes) => {
       allowNull: false,
       validate: {
         notEmpty: true
-      }
+      },
+      index: true
     },
     icon: {
       type: DataTypes.STRING,
@@ -22,8 +23,16 @@ module.exports = (sequelize, DataTypes) => {
     },
     active: {
       type: DataTypes.BOOLEAN,
-      defaultValue: true
+      defaultValue: true,
+      index: true
     }
+  }, {
+    indexes: [
+      {
+        name: 'category_name_active_idx',
+        fields: ['name', 'active']
+      }
+    ]
   });
 
   return Category;

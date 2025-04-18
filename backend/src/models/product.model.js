@@ -7,7 +7,8 @@ module.exports = (sequelize, DataTypes) => {
     },
     name: {
       type: DataTypes.STRING,
-      allowNull: false
+      allowNull: false,
+      index: true
     },
     description: {
       type: DataTypes.TEXT,
@@ -15,13 +16,15 @@ module.exports = (sequelize, DataTypes) => {
     },
     price: {
       type: DataTypes.DECIMAL(10, 2),
-      allowNull: false
+      allowNull: false,
+      index: true
     },
     imageUrl: {
       type: DataTypes.STRING
     },
-    category: {
-      type: DataTypes.STRING
+    categoryName: {
+      type: DataTypes.STRING,
+      index: true
     },
     categoryId: {
       type: DataTypes.UUID,
@@ -29,7 +32,8 @@ module.exports = (sequelize, DataTypes) => {
       references: {
         model: 'categories',
         key: 'id'
-      }
+      },
+      index: true
     },
     stockQuantity: {
       type: DataTypes.INTEGER,
@@ -37,11 +41,13 @@ module.exports = (sequelize, DataTypes) => {
     },
     isAvailable: {
       type: DataTypes.BOOLEAN,
-      defaultValue: true
+      defaultValue: true,
+      index: true
     },
     isOnSale: {
       type: DataTypes.BOOLEAN,
-      defaultValue: false
+      defaultValue: false,
+      index: true
     },
     salePrice: {
       type: DataTypes.DECIMAL(10, 2),
@@ -49,8 +55,24 @@ module.exports = (sequelize, DataTypes) => {
     },
     newArrival: {
       type: DataTypes.BOOLEAN,
-      defaultValue: false
+      defaultValue: false,
+      index: true
     }
+  }, {
+    indexes: [
+      {
+        name: 'product_category_sale_idx',
+        fields: ['categoryId', 'isOnSale']
+      },
+      {
+        name: 'product_category_new_idx',
+        fields: ['categoryId', 'newArrival']
+      },
+      {
+        name: 'product_price_available_idx',
+        fields: ['price', 'isAvailable']
+      }
+    ]
   });
 
   return Product;

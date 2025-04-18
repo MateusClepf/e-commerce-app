@@ -21,6 +21,13 @@ import RegisterPage from './components/pages/Auth/RegisterPage';
 import ProfilePage from './components/pages/Auth/ProfilePage';
 import ForgotPasswordPage from './components/pages/Auth/ForgotPasswordPage';
 import ResetPasswordPage from './components/pages/Auth/ResetPasswordPage';
+import CategoriesPage from './components/pages/Categories/CategoriesPage';
+import DealsPage from './components/pages/Deals/DealsPage';
+import FAQPage from './components/pages/Help/FAQPage';
+import ShippingPage from './components/pages/Help/ShippingPage';
+import ReturnsPage from './components/pages/Help/ReturnsPage';
+import PrivacyPolicyPage from './components/pages/Help/PrivacyPolicyPage';
+import TermsOfServicePage from './components/pages/Help/TermsOfServicePage';
 
 function App() {
   const location = useLocation();
@@ -50,6 +57,15 @@ function App() {
             <Route path="/profile" element={<ProfilePage />} />
             <Route path="/forgot-password" element={<ForgotPasswordPage />} />
             <Route path="/reset-password" element={<ResetPasswordPage />} />
+            <Route path="/categories" element={<CategoriesPage />} />
+            <Route path="/deals" element={<DealsPage />} />
+            
+            {/* Help Pages */}
+            <Route path="/faq" element={<FAQPage />} />
+            <Route path="/shipping" element={<ShippingPage />} />
+            <Route path="/returns" element={<ReturnsPage />} />
+            <Route path="/privacy" element={<PrivacyPolicyPage />} />
+            <Route path="/terms" element={<TermsOfServicePage />} />
           </Routes>
         </AnimatePresence>
       </main>

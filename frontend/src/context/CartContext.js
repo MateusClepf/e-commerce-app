@@ -1,14 +1,10 @@
 import React, { createContext, useState, useEffect } from 'react';
+import axios from 'axios';
 
 export const CartContext = createContext();
 
-// Sample coupon codes for demo purposes
-const VALID_COUPONS = [
-  { code: 'WELCOME10', discount: 0.1, type: 'percentage', maxDiscount: 50 },
-  { code: 'SUMMER25', discount: 0.25, type: 'percentage', maxDiscount: 100 },
-  { code: 'FREESHIP', discount: 10, type: 'fixed' },
-  { code: 'FLAT20', discount: 20, type: 'fixed' }
-];
+// Remove hardcoded coupon codes
+// const VALID_COUPONS = [...]
 
 export const CartProvider = ({ children }) => {
   const [cartItems, setCartItems] = useState([]);
@@ -16,6 +12,10 @@ export const CartProvider = ({ children }) => {
   const [couponCode, setCouponCode] = useState('');
   const [appliedCoupon, setAppliedCoupon] = useState(null);
   const [couponError, setCouponError] = useState('');
+  const [validatingCoupon, setValidatingCoupon] = useState(false);
+  
+  // API URL
+  const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000/api';
   
   // Load cart from localStorage on initial load
   useEffect(() => {
@@ -117,8 +117,8 @@ export const CartProvider = ({ children }) => {
     setAppliedCoupon(null);
   };
   
-  // Apply coupon code
-  const applyCoupon = (code) => {
+  // Apply coupon code - updated to use API
+  const applyCoupon = async (code) => {
     const trimmedCode = code.trim().toUpperCase();
     
     if (!trimmedCode) {
@@ -126,17 +126,29 @@ export const CartProvider = ({ children }) => {
       return false;
     }
     
-    const coupon = VALID_COUPONS.find(
-      coupon => coupon.code === trimmedCode
-    );
-    
-    if (coupon) {
-      setAppliedCoupon(coupon);
-      setCouponCode('');
+    try {
+      setValidatingCoupon(true);
       setCouponError('');
-      return true;
-    } else {
-      setCouponError('Invalid coupon code');
+      
+      // Call the coupon validation API
+      const response = await axios.get(`${API_URL}/coupons/validate/${trimmedCode}`);
+      
+      if (response.data && response.data.valid) {
+        setAppliedCoupon(response.data.coupon);
+        setCouponCode('');
+        setCouponError('');
+        setValidatingCoupon(false);
+        return true;
+      } else {
+        setCouponError('Invalid coupon code');
+        setValidatingCoupon(false);
+        return false;
+      }
+    } catch (error) {
+      // Handle error response
+      const errorMessage = error.response?.data?.message || 'Error validating coupon';
+      setCouponError(errorMessage);
+      setValidatingCoupon(false);
       return false;
     }
   };
@@ -199,6 +211,7 @@ export const CartProvider = ({ children }) => {
       removeCoupon,
       appliedCoupon,
       couponError,
+      validatingCoupon,
       getTotalPrice,
       getOriginalTotal,
       getDiscountAmount,

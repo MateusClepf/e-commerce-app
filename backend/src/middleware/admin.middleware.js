@@ -1,7 +1,7 @@
 const db = require('../models');
 
 // Check if user is admin
-const adminMiddleware = async (req, res, next) => {
+const isAdmin = async (req, res, next) => {
   try {
     const user = await db.User.findByPk(req.userId);
     
@@ -19,4 +19,4 @@ const adminMiddleware = async (req, res, next) => {
   }
 };
 
-module.exports = adminMiddleware; 
+module.exports = { isAdmin }; 
