@@ -54,9 +54,9 @@ e-commerce/
 
 All project documentation is available in the repository:
 
-- **API Documentation**: Detailed API endpoints and usage in `backend/docs/API_DOCUMENTATION.md`
-- **Database Schema**: Database structure and relationships in `backend/docs/DATABASE_SCHEMA.md`
-- **Security**: Security practices and implementation details in `backend/SECURITY.md`
+- **API Documentation**: Detailed API endpoints and usage in [backend/docs/API_DOCUMENTATION.md](backend/docs/API_DOCUMENTATION.md)
+- **Database Schema**: Database structure and relationships in [backend/docs/DATABASE_SCHEMA.md](backend/docs/DATABASE_SCHEMA.md)
+- **Security**: Security practices and implementation details in [backend/SECURITY.md](backend/SECURITY.md)
 
 ## Getting Started
 
