@@ -12,6 +12,11 @@ on:
       - 'backend/config/swagger.js'
       - 'backend/docs/components.yaml'
       - 'backend/docs/paths.yaml'
+      - 'backend/scripts/generate-swagger.js'
+      - 'backend/scripts/swagger-autogen.js'
+      - 'backend/package.json'
+      - 'backend/package-lock.json'
+  workflow_dispatch: # Manual trigger
 
 jobs:
   generate-openapi:
