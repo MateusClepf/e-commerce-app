@@ -3,6 +3,41 @@ const path = require('path');
 const fs = require('fs');
 const YAML = require('yaml');
 
+// Create safe YAML file reader function
+const safeReadYAMLFile = (filePath) => {
+  try {
+    if (fs.existsSync(filePath)) {
+      const content = fs.readFileSync(filePath, 'utf8');
+      return YAML.parse(content);
+    }
+  } catch (err) {
+    console.error(`Error reading YAML file ${filePath}:`, err);
+  }
+  return {};
+};
+
+// Determine which files exist
+const componentsFile = path.resolve(__dirname, '../docs/components.yaml');
+const pathsFile = path.resolve(__dirname, '../docs/paths.yaml');
+
+const componentsExists = fs.existsSync(componentsFile);
+const pathsExists = fs.existsSync(pathsFile);
+
+const apiFiles = [
+  './src/routes/*.js',
+  './src/models/*.js',
+  './src/controllers/*.js',
+];
+
+// Add component files if they exist
+if (componentsExists) {
+  apiFiles.push('./docs/components.yaml');
+}
+
+if (pathsExists) {
+  apiFiles.push('./docs/paths.yaml');
+}
+
 // Basic information about the API
 const swaggerOptions = {
   definition: {
@@ -37,13 +72,7 @@ const swaggerOptions = {
     }
   },
   // Path to the API docs
-  apis: [
-    './src/routes/*.js',
-    './src/models/*.js',
-    './src/controllers/*.js',
-    './docs/components.yaml', // For reusable components
-    './docs/paths.yaml'       // For API paths
-  ]
+  apis: apiFiles
 };
 
 // Initialize swagger-jsdoc
@@ -63,21 +92,29 @@ const writeSwaggerJson = () => {
     fs.mkdirSync(docsDir, { recursive: true });
   }
   
-  // Write the Swagger spec to a YAML file
-  fs.writeFileSync(
-    yamlOutputPath,
-    YAML.stringify(swaggerSpec),
-    'utf8'
-  );
+  try {
+    // Write the Swagger spec to a YAML file
+    fs.writeFileSync(
+      yamlOutputPath,
+      YAML.stringify(swaggerSpec),
+      'utf8'
+    );
+    console.log(`OpenAPI YAML specification has been written to ${yamlOutputPath}`);
+  } catch (err) {
+    console.error('Error writing YAML specification:', err);
+  }
   
-  // Also write JSON for backward compatibility
-  fs.writeFileSync(
-    jsonOutputPath,
-    JSON.stringify(swaggerSpec, null, 2),
-    'utf8'
-  );
-  
-  console.log(`OpenAPI specification has been written to ${yamlOutputPath} and ${jsonOutputPath}`);
+  try {
+    // Also write JSON for backward compatibility
+    fs.writeFileSync(
+      jsonOutputPath,
+      JSON.stringify(swaggerSpec, null, 2),
+      'utf8'
+    );
+    console.log(`OpenAPI JSON specification has been written to ${jsonOutputPath}`);
+  } catch (err) {
+    console.error('Error writing JSON specification:', err);
+  }
 };
 
 module.exports = {

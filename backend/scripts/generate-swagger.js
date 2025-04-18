@@ -54,36 +54,51 @@ const doc = {
   components: components || {}
 };
 
-// Output JSON file for processing
-const tempOutputFile = path.join(__dirname, '../docs/openapi.temp.json');
+// Output file paths
+const jsonOutputPath = path.join(__dirname, '../docs/openapi.json');
+const yamlOutputPath = path.join(__dirname, '../docs/openapi.yaml');
 
-// Final YAML output file
-const finalOutputFile = path.join(__dirname, '../docs/openapi.yaml');
-
-// Define route files to include
-const routeFiles = [
+// Find route files that exist
+const possibleRouteFiles = [
   path.join(__dirname, '../src/routes/auth.routes.js'),
   path.join(__dirname, '../src/routes/product.routes.js'),
   path.join(__dirname, '../src/routes/user.routes.js'),
   path.join(__dirname, '../src/routes/order.routes.js'),
-  path.join(__dirname, '../src/routes/cart.routes.js')
+  path.join(__dirname, '../src/routes/cart.routes.js'),
+  path.join(__dirname, '../src/routes/category.routes.js'),
+  path.join(__dirname, '../src/routes/deal.routes.js'),
+  path.join(__dirname, '../src/routes/coupon.routes.js')
 ];
 
+// Filter to only include files that exist
+const routeFiles = possibleRouteFiles.filter(file => fs.existsSync(file));
+
+if (routeFiles.length === 0) {
+  console.error('No route files found! Unable to generate OpenAPI specification.');
+  process.exit(1);
+}
+
+console.log('Found route files:', routeFiles);
+
 // Generate OpenAPI document
-swaggerAutogen(tempOutputFile, routeFiles, doc)
+swaggerAutogen(jsonOutputPath, routeFiles, doc)
   .then(() => {
-    // Read the generated JSON
-    const jsonContent = fs.readFileSync(tempOutputFile, 'utf8');
-    const jsonData = JSON.parse(jsonContent);
+    console.log(`JSON OpenAPI specification generated at ${jsonOutputPath}`);
     
-    // Convert to YAML and write to file
-    const yamlContent = YAML.stringify(jsonData);
-    fs.writeFileSync(finalOutputFile, yamlContent, 'utf8');
-    
-    // Clean up temporary JSON file
-    fs.unlinkSync(tempOutputFile);
-    
-    console.log(`OpenAPI specification has been written to ${finalOutputFile}`);
+    try {
+      // Read the generated JSON
+      const jsonContent = fs.readFileSync(jsonOutputPath, 'utf8');
+      const jsonData = JSON.parse(jsonContent);
+      
+      // Convert to YAML and write to file
+      const yamlContent = YAML.stringify(jsonData);
+      fs.writeFileSync(yamlOutputPath, yamlContent, 'utf8');
+      
+      console.log(`YAML OpenAPI specification generated at ${yamlOutputPath}`);
+    } catch (err) {
+      console.error('Error converting JSON to YAML:', err);
+      // Still return success as the JSON was generated
+    }
   })
   .catch((err) => {
     console.error('Error generating OpenAPI schema:', err);
